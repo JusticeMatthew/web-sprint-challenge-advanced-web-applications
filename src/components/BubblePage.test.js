@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Login from './Login';
 import BubblePage from './BubblePage';
 import ColorList from './ColorList';
 import Bubbles from './Bubbles';
