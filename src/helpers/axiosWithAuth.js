@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-export default function axiosAuth() {
+export const axiosWithAuth = () => {
   const token = localStorage.getItem('token');
 
   return axios.create({
@@ -12,4 +12,4 @@ export default function axiosAuth() {
       Authorization: token,
     },
   });
-}
+};

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 import EditMenu from './EditMenu';
-// import axiosAuth from '../helpers/axiosWithAuth';
+import { axiosWithAuth } from '../helpers/axiosWithAuth';
 
 const initialColor = {
   color: '',
   code: { hex: '' },
 };
 
-const ColorList = ({ colors, updateColors, push }) => {
+const ColorList = ({ colors, updateColors }) => {
+  const history = useHistory();
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
@@ -18,20 +19,42 @@ const ColorList = ({ colors, updateColors, push }) => {
     setColorToEdit(color);
   };
 
-  const saveEdit = (e) => {
+  const saveEdit = async (e) => {
     e.preventDefault();
-    axios
-      .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+    axiosWithAuth()
+      .put(`/colors/${colorToEdit.id}`, colorToEdit)
       .then((res) => {
-        push(`/bubble-page`);
-        console.log(res);
+        setEditing(false);
+        axiosWithAuth()
+          .get('/colors')
+          .then((res) => {
+            updateColors(res.data);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => {
-        console.log(err);
+        history.push('/bubble-page');
+        console.log(err.response);
       });
   };
 
-  const deleteColor = (color) => {};
+  const deleteColor = (color) => {
+    axiosWithAuth()
+      .delete(`/colors/${color.id}`)
+      .then((res) => {
+        setEditing(false);
+        axiosWithAuth()
+          .get('/colors')
+          .then((res) => {
+            updateColors(res.data);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        history.push('/bubble-page');
+        console.log(err.response);
+      });
+  };
 
   return (
     <div className='colors-wrap'>
@@ -64,6 +87,7 @@ const ColorList = ({ colors, updateColors, push }) => {
           saveEdit={saveEdit}
           setColorToEdit={setColorToEdit}
           setEditing={setEditing}
+          initialColor={initialColor}
         />
       )}
     </div>

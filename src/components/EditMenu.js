@@ -1,15 +1,14 @@
 import React from 'react';
 
-const EditMenu = ({ colorToEdit, saveEdit, setColorToEdit, setEditing }) => {
+const EditMenu = ({
+  colorToEdit,
+  saveEdit,
+  setColorToEdit,
+  setEditing,
+  initialColor,
+}) => {
   return (
-    <form
-      onSubmit={
-        (saveEdit,
-        () => {
-          setEditing(false);
-        })
-      }
-    >
+    <form onSubmit={saveEdit}>
       <legend>edit color</legend>
       <label htmlFor='colorName'>color name:</label>
       <input
@@ -36,7 +35,14 @@ const EditMenu = ({ colorToEdit, saveEdit, setColorToEdit, setEditing }) => {
 
       <div className='button-row'>
         <button type='submit'>save</button>
-        <button onClick={() => setEditing(false)}>cancel</button>
+        <button
+          onClick={() => {
+            setEditing(false);
+            setColorToEdit(initialColor);
+          }}
+        >
+          cancel
+        </button>
       </div>
     </form>
   );
